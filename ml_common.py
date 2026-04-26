@@ -30,7 +30,7 @@ SI_TARGET_LIKE_NAMES = {
     "si_scaled",
     "target_si",
 }
-DATA_FILE = "Данные_для_курсовои_Классическое_МО.xlsx"
+DATA_FILE = Path("data") / "Данные_для_курсовой_Классическое_МО.xlsx"
 
 
 def project_root() -> Path:
