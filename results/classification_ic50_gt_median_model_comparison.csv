@@ -1,0 +1,4 @@
+task,model,roc_auc,comment
+classification_ic50_gt_median,Random Forest,0.78,best_post_leakage_descriptor_only
+classification_ic50_gt_median,Gradient Boosting,0.77,post_leakage_descriptor_only
+classification_ic50_gt_median,Logistic Regression,0.75,post_leakage_descriptor_only

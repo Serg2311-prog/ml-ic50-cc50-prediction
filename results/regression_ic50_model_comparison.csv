@@ -1,0 +1,4 @@
+target,model,RMSE,MAE,R2
+IC50,Gradient Boosting,415.49,208.81,0.4825
+IC50,Random Forest,418.91,206.03,0.4739
+IC50,Linear Regression,441.22,245.14,0.4164
