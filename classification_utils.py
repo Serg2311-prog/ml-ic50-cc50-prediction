@@ -14,6 +14,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (
     accuracy_score,
+    average_precision_score,
     confusion_matrix,
     f1_score,
     precision_score,
@@ -197,6 +198,7 @@ def run_classification_task(task: ClassificationTask) -> pd.DataFrame:
         rec = float(recall_score(y_test, y_pred, zero_division=0))
         f1 = float(f1_score(y_test, y_pred, zero_division=0))
         auc = float(roc_auc_score(y_test, y_proba))
+        pr_auc = float(average_precision_score(y_test, y_proba))
         records.append(
             {
                 "task": task.name,
@@ -207,6 +209,7 @@ def run_classification_task(task: ClassificationTask) -> pd.DataFrame:
                 "recall": rec,
                 "f1": f1,
                 "roc_auc": auc,
+                "pr_auc": pr_auc,
                 "best_params": json.dumps(search.best_params_, ensure_ascii=False),
             }
         )
@@ -246,7 +249,8 @@ def run_classification_task(task: ClassificationTask) -> pd.DataFrame:
         (
             f"- Метрики лучшей модели: accuracy={best_row['accuracy']:.4f}, "
             f"precision={best_row['precision']:.4f}, recall={best_row['recall']:.4f}, "
-            f"F1={best_row['f1']:.4f}, ROC-AUC={best_row['roc_auc']:.4f}"
+            f"F1={best_row['f1']:.4f}, ROC-AUC={best_row['roc_auc']:.4f}, "
+            f"PR-AUC={best_row['pr_auc']:.4f}"
         ),
         "",
         "## Интерпретация",
