@@ -26,12 +26,12 @@ from sklearn.preprocessing import StandardScaler
 
 from ml_common import (
     RANDOM_STATE,
-    assert_no_target_like_columns,
     build_binary_target,
     build_feature_matrix,
     load_dataset,
     make_results_subdir,
     split_data,
+    validate_no_target_like_columns,
 )
 
 
@@ -150,6 +150,7 @@ def _save_confusion_matrix_figure(matrix: np.ndarray, labels: list[str], path: s
 def run_classification_task(task: ClassificationTask) -> pd.DataFrame:
     """Запуск полного цикла классификации для одной постановки."""
     x, y = _prepare_task_data(task)
+    validate_no_target_like_columns(x)
     x_train, x_test, y_train, y_test = split_data(x, y, stratify=True)
     cv = StratifiedKFold(n_splits=CV_FOLDS, shuffle=True, random_state=RANDOM_STATE)
     exp_dir = make_results_subdir(f"classification_{task.name}")
@@ -161,7 +162,7 @@ def run_classification_task(task: ClassificationTask) -> pd.DataFrame:
     best_probabilities: np.ndarray | None = None
 
     for config in _build_search_configs():
-        assert_no_target_like_columns(x_train)
+        validate_no_target_like_columns(x_train)
         if config.search_kind == "grid":
             search = GridSearchCV(
                 estimator=config.pipeline,

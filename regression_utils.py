@@ -21,6 +21,7 @@ from ml_common import (
     make_results_subdir,
     regression_metrics,
     split_data,
+    validate_no_target_like_columns,
 )
 
 
@@ -104,6 +105,7 @@ def _build_search_configs() -> list[SearchConfig]:
 def run_regression_task(target_column: str, experiment_name: str) -> pd.DataFrame:
     """Запуск полного цикла регрессии для указанного таргета."""
     x, y = build_regression_frame(target_column)
+    validate_no_target_like_columns(x)
     assert_no_target_like_columns(x)
     x_train, x_test, y_train, y_test = split_data(x, y, stratify=False)
     cv = KFold(n_splits=CV_FOLDS, shuffle=True, random_state=RANDOM_STATE)
@@ -135,6 +137,7 @@ def run_regression_task(target_column: str, experiment_name: str) -> pd.DataFram
                 refit=True,
             )
 
+        validate_no_target_like_columns(x_train)
         assert_no_target_like_columns(x_train)
         search.fit(x_train, y_train)
         best_model = search.best_estimator_

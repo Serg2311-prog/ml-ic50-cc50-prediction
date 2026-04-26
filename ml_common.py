@@ -21,6 +21,15 @@ TARGET_LIKE_COLUMNS = (
     "CC50_log",
     "SI_log",
 )
+SI_TARGET_LIKE_NAMES = {
+    "si",
+    "si_log",
+    "log_si",
+    "si_bin",
+    "si_class",
+    "si_scaled",
+    "target_si",
+}
 DATA_FILE = "Данные_для_курсовои_Классическое_МО.xlsx"
 
 
@@ -46,6 +55,22 @@ def load_dataset() -> pd.DataFrame:
     return df
 
 
+def get_target_like_columns(columns: Iterable[str]) -> list[str]:
+    """Возвращает endpoint/target-like колонки и известные производные таргетов."""
+    target_like: list[str] = []
+    explicit_targets = set(TARGET_LIKE_COLUMNS)
+    for col in columns:
+        normalized = col.lower()
+        if (
+            col in explicit_targets
+            or "ic50" in normalized
+            or "cc50" in normalized
+            or normalized in SI_TARGET_LIKE_NAMES
+        ):
+            target_like.append(col)
+    return target_like
+
+
 def build_feature_matrix(df: pd.DataFrame, target_column: str) -> pd.DataFrame:
     """
     Формирует descriptor-only матрицу признаков без утечки таргетов.
@@ -53,16 +78,21 @@ def build_feature_matrix(df: pd.DataFrame, target_column: str) -> pd.DataFrame:
     Все endpoint/target-like колонки и их производные удаляются для любой задачи.
     """
     _ = target_column
-    cols_to_drop = [col for col in TARGET_LIKE_COLUMNS if col in df.columns]
+    cols_to_drop = get_target_like_columns(df.columns)
     return df.drop(columns=cols_to_drop)
+
+
+def validate_no_target_like_columns(x: pd.DataFrame) -> None:
+    """Выбрасывает ошибку, если в матрицу признаков попали target-like колонки."""
+    leaked = get_target_like_columns(x.columns)
+    if leaked:
+        raise ValueError(f"Target leakage detected in features: {leaked}")
 
 
 def assert_no_target_like_columns(x: pd.DataFrame) -> None:
     """Проверяет, что в матрицу признаков не попали endpoint/target-like колонки."""
-    assert not any(col in x.columns for col in TARGET_LIKE_COLUMNS), (
-        "Feature matrix contains target-like columns: "
-        f"{[col for col in TARGET_LIKE_COLUMNS if col in x.columns]}"
-    )
+    leaked = get_target_like_columns(x.columns)
+    assert not leaked, f"Feature matrix contains target-like columns: {leaked}"
 
 
 def build_regression_frame(target_column: str) -> tuple[pd.DataFrame, pd.Series]:
