@@ -26,6 +26,7 @@ from sklearn.preprocessing import StandardScaler
 
 from ml_common import (
     RANDOM_STATE,
+    assert_no_target_like_columns,
     build_binary_target,
     build_feature_matrix,
     load_dataset,
@@ -160,6 +161,7 @@ def run_classification_task(task: ClassificationTask) -> pd.DataFrame:
     best_probabilities: np.ndarray | None = None
 
     for config in _build_search_configs():
+        assert_no_target_like_columns(x_train)
         if config.search_kind == "grid":
             search = GridSearchCV(
                 estimator=config.pipeline,

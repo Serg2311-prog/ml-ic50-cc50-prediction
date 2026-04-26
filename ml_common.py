@@ -13,6 +13,14 @@ from sklearn.model_selection import train_test_split
 RANDOM_STATE = 42
 TEST_SIZE = 0.2
 TARGET_COLUMNS = ("IC50, mM", "CC50, mM", "SI")
+TARGET_LIKE_COLUMNS = (
+    "IC50, mM",
+    "CC50, mM",
+    "SI",
+    "IC50_log",
+    "CC50_log",
+    "SI_log",
+)
 DATA_FILE = "Данные_для_курсовои_Классическое_МО.xlsx"
 
 
@@ -40,19 +48,21 @@ def load_dataset() -> pd.DataFrame:
 
 def build_feature_matrix(df: pd.DataFrame, target_column: str) -> pd.DataFrame:
     """
-    Формирует матрицу признаков без утечки таргета.
+    Формирует descriptor-only матрицу признаков без утечки таргетов.
 
-    Правила анти-утечки:
-    - для IC50/CC50 удаляем SI;
-    - для SI удаляем IC50 и CC50.
+    Все endpoint/target-like колонки и их производные удаляются для любой задачи.
     """
-    forbidden: set[str] = {target_column}
-    if target_column in {"IC50, mM", "CC50, mM"}:
-        forbidden.add("SI")
-    if target_column == "SI":
-        forbidden.update({"IC50, mM", "CC50, mM"})
-    cols_to_drop = [col for col in forbidden if col in df.columns]
+    _ = target_column
+    cols_to_drop = [col for col in TARGET_LIKE_COLUMNS if col in df.columns]
     return df.drop(columns=cols_to_drop)
+
+
+def assert_no_target_like_columns(x: pd.DataFrame) -> None:
+    """Проверяет, что в матрицу признаков не попали endpoint/target-like колонки."""
+    assert not any(col in x.columns for col in TARGET_LIKE_COLUMNS), (
+        "Feature matrix contains target-like columns: "
+        f"{[col for col in TARGET_LIKE_COLUMNS if col in x.columns]}"
+    )
 
 
 def build_regression_frame(target_column: str) -> tuple[pd.DataFrame, pd.Series]:
