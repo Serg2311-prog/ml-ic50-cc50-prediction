@@ -13,6 +13,23 @@ from sklearn.model_selection import train_test_split
 RANDOM_STATE = 42
 TEST_SIZE = 0.2
 TARGET_COLUMNS = ("IC50, mM", "CC50, mM", "SI")
+TARGET_LIKE_COLUMNS = (
+    "IC50, mM",
+    "CC50, mM",
+    "SI",
+    "IC50_log",
+    "CC50_log",
+    "SI_log",
+)
+SI_TARGET_LIKE_NAMES = {
+    "si",
+    "si_log",
+    "log_si",
+    "si_bin",
+    "si_class",
+    "si_scaled",
+    "target_si",
+}
 DATA_FILE = "Данные_для_курсовои_Классическое_МО.xlsx"
 
 
@@ -38,21 +55,44 @@ def load_dataset() -> pd.DataFrame:
     return df
 
 
+def get_target_like_columns(columns: Iterable[str]) -> list[str]:
+    """Возвращает endpoint/target-like колонки и известные производные таргетов."""
+    target_like: list[str] = []
+    explicit_targets = set(TARGET_LIKE_COLUMNS)
+    for col in columns:
+        normalized = col.lower()
+        if (
+            col in explicit_targets
+            or "ic50" in normalized
+            or "cc50" in normalized
+            or normalized in SI_TARGET_LIKE_NAMES
+        ):
+            target_like.append(col)
+    return target_like
+
+
 def build_feature_matrix(df: pd.DataFrame, target_column: str) -> pd.DataFrame:
     """
-    Формирует матрицу признаков без утечки таргета.
+    Формирует descriptor-only матрицу признаков без утечки таргетов.
 
-    Правила анти-утечки:
-    - для IC50/CC50 удаляем SI;
-    - для SI удаляем IC50 и CC50.
+    Все endpoint/target-like колонки и их производные удаляются для любой задачи.
     """
-    forbidden: set[str] = {target_column}
-    if target_column in {"IC50, mM", "CC50, mM"}:
-        forbidden.add("SI")
-    if target_column == "SI":
-        forbidden.update({"IC50, mM", "CC50, mM"})
-    cols_to_drop = [col for col in forbidden if col in df.columns]
+    _ = target_column
+    cols_to_drop = get_target_like_columns(df.columns)
     return df.drop(columns=cols_to_drop)
+
+
+def validate_no_target_like_columns(x: pd.DataFrame) -> None:
+    """Выбрасывает ошибку, если в матрицу признаков попали target-like колонки."""
+    leaked = get_target_like_columns(x.columns)
+    if leaked:
+        raise ValueError(f"Target leakage detected in features: {leaked}")
+
+
+def assert_no_target_like_columns(x: pd.DataFrame) -> None:
+    """Проверяет, что в матрицу признаков не попали endpoint/target-like колонки."""
+    leaked = get_target_like_columns(x.columns)
+    assert not leaked, f"Feature matrix contains target-like columns: {leaked}"
 
 
 def build_regression_frame(target_column: str) -> tuple[pd.DataFrame, pd.Series]:
