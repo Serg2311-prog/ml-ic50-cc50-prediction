@@ -1,0 +1,4 @@
+target,model,RMSE,MAE,R2,interpretation
+CC50,Random Forest,415.75,235.86,0.6666,best_by_rmse
+CC50,Gradient Boosting,427.01,246.49,0.6483,competitive_tree_ensemble
+CC50,Linear Regression,446.26,325.56,0.6159,linear_baseline
