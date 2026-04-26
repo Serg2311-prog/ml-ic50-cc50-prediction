@@ -1,0 +1,4 @@
+target,model,cv_rmse,RMSE,MAE,R2,best_params
+"IC50, mM",Random Forest,275.14726738946894,457.7745670188705,240.5435481874685,0.37175307995849816,"{""model__n_estimators"": 600, ""model__min_samples_split"": 4, ""model__min_samples_leaf"": 4, ""model__max_features"": ""sqrt"", ""model__max_depth"": 24}"
+"IC50, mM",Gradient Boosting,284.33757705751697,463.3588824189776,254.43570055092727,0.35633183131740165,"{""model__subsample"": 0.85, ""model__n_estimators"": 100, ""model__min_samples_split"": 5, ""model__min_samples_leaf"": 1, ""model__max_depth"": 3, ""model__learning_rate"": 0.02}"
+"IC50, mM",Linear Regression,393.32697201915397,508.2466414086966,267.18051975077356,0.22558085325974842,"{""model__fit_intercept"": true, ""model__positive"": true}"

@@ -1,0 +1,4 @@
+task,model,cv_roc_auc,accuracy,precision,recall,f1,roc_auc,pr_auc,best_params
+si_gt_median,Random Forest,0.726640625,0.6567164179104478,0.6781609195402298,0.59,0.6310160427807486,0.6891584158415842,0.7009656576722274,"{""model__n_estimators"": 400, ""model__min_samples_split"": 8, ""model__min_samples_leaf"": 2, ""model__max_features"": 0.5, ""model__max_depth"": 8, ""model__class_weight"": ""balanced""}"
+si_gt_median,Gradient Boosting,0.719265625,0.6517412935323383,0.6704545454545454,0.59,0.6276595744680851,0.673019801980198,0.6792889698166515,"{""model__subsample"": 0.7, ""model__n_estimators"": 300, ""model__min_samples_split"": 2, ""model__min_samples_leaf"": 1, ""model__max_depth"": 5, ""model__learning_rate"": 0.02}"
+si_gt_median,Logistic Regression,0.693828125,0.6368159203980099,0.6391752577319587,0.62,0.6294416243654822,0.6543069306930693,0.6610873261069488,"{""model__C"": 0.5, ""model__class_weight"": null, ""model__penalty"": ""l1""}"
