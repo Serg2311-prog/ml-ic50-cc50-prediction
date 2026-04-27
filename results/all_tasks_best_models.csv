@@ -1,8 +1,0 @@
-task,type,best_model,roc_auc,RMSE,MAE,R2,comment
-classification_ic50_gt_median,classification,Random Forest,0.78,,,,post_leakage_descriptor_only
-classification_cc50_gt_median,classification,Random Forest,0.83,,,,post_leakage_descriptor_only
-classification_si_gt_median,classification,Random Forest,0.69,,,,post_leakage_descriptor_only
-classification_si_gt_8,classification,Random Forest,0.75,,,,post_leakage_descriptor_only
-regression_ic50,regression,Gradient Boosting,,415.49,208.81,0.4825,descriptor_only_baseline
-regression_cc50,regression,Random Forest,,415.75,235.86,0.6666,descriptor_only_baseline
-regression_si,regression,Gradient Boosting,,1353.47,198.30,0.0880,descriptor_only_baseline
