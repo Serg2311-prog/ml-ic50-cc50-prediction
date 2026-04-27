@@ -69,18 +69,21 @@
 
 | Задача | Лучшая модель | RMSE | MAE | R2 |
 |---|---|---:|---:|---:|
-| IC50 | Gradient Boosting | 415.49 | 208.81 | 0.4825 |
-| CC50 | Random Forest | 415.75 | 235.86 | 0.6666 |
-| SI | Gradient Boosting | 1353.47 | 198.30 | 0.0880 |
+| IC50 | Random Forest | 457.77 | 240.54 | 0.3718 |
+| CC50 | Random Forest | 455.70 | 287.39 | 0.5995 |
+| SI | Gradient Boosting | 1353.61 | 198.02 | 0.0878 |
 
 ### Классификация после исправления leakage
 
 | Задача | Лучшая модель | ROC-AUC |
 |---|---|---:|
-| IC50 > median | Random Forest | ~0.78 |
-| CC50 > median | Random Forest / Logistic Regression | ~0.83 |
-| SI > median | Random Forest | ~0.69 |
-| SI > 8 | Random Forest | ~0.75 |
+| IC50 > median | Random Forest | 0.7795 |
+| CC50 > median | Random Forest | 0.8310 |
+| SI > median | Random Forest | 0.6892 |
+| SI > 8 | Random Forest | 0.7530 |
+
+Для `CC50 > median` Logistic Regression практически не уступает Random Forest
+(ROC-AUC 0.8297 vs 0.8310), но лучшей моделью по ROC-AUC остается Random Forest.
 
 Старые notebook outputs с ROC-AUC около `0.99-1.0` были leakage-артефактом:
 в признаки попадал `IC50_log`, то есть прямое преобразование target. Эти

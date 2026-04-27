@@ -99,8 +99,8 @@ def fit_regression_pipeline(
 def plot_fact_vs_prediction(df: pd.DataFrame) -> dict[str, tuple[Pipeline, pd.Index]]:
     regression_models = {
         "IC50, mM": (
-            "Gradient Boosting",
-            GradientBoostingRegressor(random_state=RANDOM_STATE),
+            "Random Forest",
+            RandomForestRegressor(n_estimators=400, random_state=RANDOM_STATE, n_jobs=-1),
         ),
         "CC50, mM": (
             "Random Forest",

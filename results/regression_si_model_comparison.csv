@@ -1,4 +1,0 @@
-model,RMSE,MAE,R2,interpretation
-Gradient Boosting,1353.47,198.30,0.0880,best_rmse
-Random Forest,1358.54,191.30,0.0812,best_mae
-Linear Regression,1379.37,222.30,0.0528,baseline
